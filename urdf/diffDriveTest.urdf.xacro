@@ -1,8 +1,10 @@
 <?xml version="1.0"?>
 <robot name="roscontrol" xmlns:xacro="http://ros.org/wiki/xacro">
 
-    <xacro:property name="bodylen" value="0.6" />
-    <xacro:property name="width" value="0.2" />
+    <xacro:property name="WheelSep" value="0.26"/>
+    <xacro:property name="WheelRad" value="0.055"/>
+    <xacro:property name="WheelLen" value="0.1"/>
+    <xacro:property name="WheelPoss" value="0.15"/>
 
     <material name="blue">
         <color rgba="0 0 0.8 1"/>
@@ -26,16 +28,118 @@
     <link name="base_link">
         <visual>
             <geometry>
-                <cylinder radius="${width}" length="${bodylen}"/>
+                <box size="0.8 0.4 0.2"/>
             </geometry>
             <material name="blue"/>
         </visual>
         <collision>
             <geometry>
-                <cylinder radius="${width}" length="${bodylen}"/>
+                <box size="0.8 0.4 0.2"/>
             </geometry>
         </collision>
         <xacro:default_inertial mass="10"/>
     </link>
 
+    <!-- wheels -->
+    <xacro:macro name="wheels" params = "prefex reflect">
+        <!-- back wheels -->
+        <link name="${prefex}_back_wheel">
+            <visual>
+                <origin rpy="1.57075 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <cylinder length="${WheelLen}" radius="${WheelRad}"/>
+                </geometry>
+                <material name="black"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder length="${WheelLen}" radius="${WheelRad}"/>
+                </geometry>
+            </collision>
+            <xacro:default_inertial mass="1"/>
+        </link>
+        <joint name="${prefex}_back_wheel_joint" type="continuous">
+            <axis xyz="0 1 0" rpy="0 0 0" />
+            <parent link="base_link"/>
+            <child link="${prefex}_back_wheel"/>
+            <origin rpy="0 0 0" xyz="-${WheelPoss*2} ${reflect*WheelSep/2} -0.13"/>
+        </joint>
+
+        <link name="${prefex}_back_M_wheel">
+            <visual>
+                <origin rpy="1.57075 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <cylinder length="${WheelLen}" radius="${WheelRad}"/>
+                </geometry>
+                <material name="black"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder length="${WheelLen}" radius="${WheelRad}"/>
+                </geometry>
+            </collision>
+            <xacro:default_inertial mass="1"/>
+        </link>
+        <joint name="${prefex}_back_M_wheel_joint" type="continuous">
+            <axis xyz="0 1 0" rpy="0 0 0" />            
+            <parent link="base_link"/>
+            <child link="${prefex}_back_M_wheel"/>
+            <origin rpy="0 0 0" xyz="-${WheelPoss} ${reflect*WheelSep/2} -0.13"/>
+        </joint>
+
+        <!-- front wheels -->
+        <link name="${prefex}_front_M_wheel">
+            <visual>
+                <origin rpy="1.57075 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <cylinder length="${WheelLen}" radius="${WheelRad}"/>
+                </geometry>
+                <material name="black"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder length="${WheelLen}" radius="${WheelRad}"/>
+                </geometry>
+            </collision>
+            <xacro:default_inertial mass="1"/>
+        </link>
+        <joint name="${prefex}_front_M_wheel_joint" type="continuous">
+            <axis xyz="0 1 0" rpy="0 0 0" />
+            <parent link="base_link"/>
+            <child link="${prefex}_front_M_wheel"/>
+            <origin rpy="0 0 0" xyz="${WheelPoss} ${reflect*WheelSep/2} -0.13"/>
+        </joint>
+
+        <link name="${prefex}_front_wheel">
+            <visual>
+                <origin rpy="1.57075 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <cylinder length="${WheelLen}" radius="${WheelRad}"/>
+                </geometry>
+                <material name="black"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder length="${WheelLen}" radius="${WheelRad}"/>
+                </geometry>
+            </collision>
+            <xacro:default_inertial mass="1"/>
+        </link>
+        <joint name="${prefex}_front_wheel_joint" type="continuous">
+            <axis xyz="0 1 0" rpy="0 0 0" />
+            <parent link="base_link"/>
+            <child link="${prefex}_front_wheel"/>
+            <origin rpy="0 0 0" xyz="${WheelPoss*2} ${reflect*WheelSep/2} -0.13"/>
+        </joint>
+    </xacro:macro>
+
+    <xacro:wheels prefex = "right" reflect = "-1"/>
+    <xacro:wheels prefex = "left" reflect = "1"/>
+
+    <!-- Gazebo plugin for ROS Control -->
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+            <robotNamespace>/</robotNamespace>
+        </plugin>
+    </gazebo>
 </robot>
