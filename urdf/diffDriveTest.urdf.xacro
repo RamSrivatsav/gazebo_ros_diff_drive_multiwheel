@@ -39,6 +39,9 @@
         </collision>
         <xacro:default_inertial mass="10"/>
     </link>
+    <gazebo reference="base_link">
+        <material>Gazebo/Orange</material>
+    </gazebo>
 
     <!-- wheels -->
     <xacro:macro name="wheels" params = "prefex reflect">
@@ -64,6 +67,9 @@
             <child link="${prefex}_back_wheel"/>
             <origin rpy="0 0 0" xyz="-${WheelPoss*2} ${reflect*WheelSep/2} -0.13"/>
         </joint>
+        <gazebo reference="${prefex}_back_wheel">
+            <material>Gazebo/Black</material>
+        </gazebo>
 
         <link name="${prefex}_back_M_wheel">
             <visual>
@@ -86,6 +92,9 @@
             <child link="${prefex}_back_M_wheel"/>
             <origin rpy="0 0 0" xyz="-${WheelPoss} ${reflect*WheelSep/2} -0.13"/>
         </joint>
+        <gazebo reference="${prefex}_back_M_wheel">
+            <material>Gazebo/Black</material>
+        </gazebo>
 
         <!-- front wheels -->
         <link name="${prefex}_front_M_wheel">
@@ -109,6 +118,9 @@
             <child link="${prefex}_front_M_wheel"/>
             <origin rpy="0 0 0" xyz="${WheelPoss} ${reflect*WheelSep/2} -0.13"/>
         </joint>
+        <gazebo reference="${prefex}_front_M_wheel">
+            <material>Gazebo/Black</material>
+        </gazebo>
 
         <link name="${prefex}_front_wheel">
             <visual>
@@ -131,6 +143,9 @@
             <child link="${prefex}_front_wheel"/>
             <origin rpy="0 0 0" xyz="${WheelPoss*2} ${reflect*WheelSep/2} -0.13"/>
         </joint>
+        <gazebo reference="${prefex}_front_wheel">
+            <material>Gazebo/Black</material>
+        </gazebo>
     </xacro:macro>
 
     <xacro:wheels prefex = "right" reflect = "-1"/>
