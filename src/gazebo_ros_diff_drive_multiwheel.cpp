@@ -65,16 +65,16 @@ enum {
     LEFT,
 };
 
-GazeboRosDiffDrive::GazeboRosDiffDrive() {}
+GazeboRosDiffDriveMW::GazeboRosDiffDriveMW() {}
 
 // Destructor
-GazeboRosDiffDrive::~GazeboRosDiffDrive() 
+GazeboRosDiffDriveMW::~GazeboRosDiffDriveMW() 
 {
 	FiniChild();
 }
 
 // Load the controller
-void GazeboRosDiffDrive::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sdf )
+void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sdf )
 {
 
     this->parent = _parent;
@@ -93,7 +93,7 @@ void GazeboRosDiffDrive::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sdf 
 
     if (!_sdf->HasElement("legacyMode"))
     {
-      ROS_ERROR_NAMED("diff_drive", "GazeboRosDiffDrive Plugin missing <legacyMode>, defaults to true\n"
+      ROS_ERROR_NAMED("diff_drive", "GazeboRosDiffDriveMW Plugin missing <legacyMode>, defaults to true\n"
 	       "This setting assumes you have a old package, where the right and left wheel are changed to fix a former code issue\n"
 	       "To get rid of this error just set <legacyMode> to false if you just created a new package.\n"
 	       "To fix an old package you have to exchange left wheel by the right wheel.\n"
@@ -123,7 +123,7 @@ void GazeboRosDiffDrive::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sdf 
 
     this->publish_tf_ = true;
     if (!_sdf->HasElement("publishTf")) {
-      ROS_WARN_NAMED("diff_drive", "GazeboRosDiffDrive Plugin (ns = %s) missing <publishTf>, defaults to %d",
+      ROS_WARN_NAMED("diff_drive", "GazeboRosDiffDriveMW Plugin (ns = %s) missing <publishTf>, defaults to %d",
           this->robot_namespace_.c_str(), this->publish_tf_);
     } else {
       this->publish_tf_ = _sdf->GetElement("publishTf")->Get<bool>();
@@ -164,7 +164,7 @@ void GazeboRosDiffDrive::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sdf 
 
     ros::SubscribeOptions so =
         ros::SubscribeOptions::create<geometry_msgs::Twist>(command_topic_, 1,
-                boost::bind(&GazeboRosDiffDrive::cmdVelCallback, this, _1),
+                boost::bind(&GazeboRosDiffDriveMW::cmdVelCallback, this, _1),
                 ros::VoidPtr(), &queue_);
 
     cmd_vel_subscriber_ = gazebo_ros_->node()->subscribe(so);
@@ -178,15 +178,15 @@ void GazeboRosDiffDrive::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sdf 
 
     // start custom queue for diff drive
     this->callback_queue_thread_ =
-        boost::thread ( boost::bind ( &GazeboRosDiffDrive::QueueThread, this ) );
+        boost::thread ( boost::bind ( &GazeboRosDiffDriveMW::QueueThread, this ) );
 
     // listen to the update event (broadcast every simulation iteration)
     this->update_connection_ =
-        event::Events::ConnectWorldUpdateBegin ( boost::bind ( &GazeboRosDiffDrive::UpdateChild, this ) );
+        event::Events::ConnectWorldUpdateBegin ( boost::bind ( &GazeboRosDiffDriveMW::UpdateChild, this ) );
 
 }
 
-void GazeboRosDiffDrive::Reset()
+void GazeboRosDiffDriveMW::Reset()
 {
 #if GAZEBO_MAJOR_VERSION >= 8
   last_update_time_ = parent->GetWorld()->SimTime();
@@ -202,7 +202,7 @@ void GazeboRosDiffDrive::Reset()
   joints_[RIGHT]->SetParam ( "fmax", 0, wheel_torque );
 }
 
-void GazeboRosDiffDrive::publishWheelJointState()
+void GazeboRosDiffDriveMW::publishWheelJointState()
 {
     ros::Time current_time = ros::Time::now();
 
@@ -223,7 +223,7 @@ void GazeboRosDiffDrive::publishWheelJointState()
     joint_state_publisher_.publish ( joint_state_ );
 }
 
-void GazeboRosDiffDrive::publishWheelTF()
+void GazeboRosDiffDriveMW::publishWheelTF()
 {
     ros::Time current_time = ros::Time::now();
     for ( int i = 0; i < 2; i++ ) {
@@ -247,13 +247,13 @@ void GazeboRosDiffDrive::publishWheelTF()
 }
 
 // Update the controller
-void GazeboRosDiffDrive::UpdateChild()
+void GazeboRosDiffDriveMW::UpdateChild()
 {
 
     /* force reset SetParam("fmax") since Joint::Reset reset MaxForce to zero at
        https://bitbucket.org/osrf/gazebo/src/8091da8b3c529a362f39b042095e12c94656a5d1/gazebo/physics/Joint.cc?at=gazebo2_2.2.5#cl-331
        (this has been solved in https://bitbucket.org/osrf/gazebo/diff/gazebo/physics/Joint.cc?diff2=b64ff1b7b6ff&at=issue_964 )
-       and Joint::Reset is called after ModelPlugin::Reset, so we need to set maxForce to wheel_torque other than GazeboRosDiffDrive::Reset
+       and Joint::Reset is called after ModelPlugin::Reset, so we need to set maxForce to wheel_torque other than GazeboRosDiffDriveMW::Reset
        (this seems to be solved in https://bitbucket.org/osrf/gazebo/commits/ec8801d8683160eccae22c74bf865d59fac81f1e)
     */
     for ( int i = 0; i < 2; i++ ) {
@@ -312,7 +312,7 @@ void GazeboRosDiffDrive::UpdateChild()
 }
 
 // Finalize the controller
-void GazeboRosDiffDrive::FiniChild()
+void GazeboRosDiffDriveMW::FiniChild()
 {
     alive_ = false;
     queue_.clear();
@@ -321,7 +321,7 @@ void GazeboRosDiffDrive::FiniChild()
     callback_queue_thread_.join();
 }
 
-void GazeboRosDiffDrive::getWheelVelocities()
+void GazeboRosDiffDriveMW::getWheelVelocities()
 {
     boost::mutex::scoped_lock scoped_lock ( lock );
 
@@ -340,14 +340,14 @@ void GazeboRosDiffDrive::getWheelVelocities()
     }
 }
 
-void GazeboRosDiffDrive::cmdVelCallback ( const geometry_msgs::Twist::ConstPtr& cmd_msg )
+void GazeboRosDiffDriveMW::cmdVelCallback ( const geometry_msgs::Twist::ConstPtr& cmd_msg )
 {
     boost::mutex::scoped_lock scoped_lock ( lock );
     x_ = cmd_msg->linear.x;
     rot_ = cmd_msg->angular.z;
 }
 
-void GazeboRosDiffDrive::QueueThread()
+void GazeboRosDiffDriveMW::QueueThread()
 {
     static const double timeout = 0.01;
 
@@ -356,7 +356,7 @@ void GazeboRosDiffDrive::QueueThread()
     }
 }
 
-void GazeboRosDiffDrive::UpdateOdometryEncoder()
+void GazeboRosDiffDriveMW::UpdateOdometryEncoder()
 {
     double vl = joints_[LEFT]->GetVelocity ( 0 );
     double vr = joints_[RIGHT]->GetVelocity ( 0 );
@@ -416,7 +416,7 @@ void GazeboRosDiffDrive::UpdateOdometryEncoder()
     odom_.twist.twist.linear.y = dy/seconds_since_last_update;
 }
 
-void GazeboRosDiffDrive::publishOdometry ( double step_time )
+void GazeboRosDiffDriveMW::publishOdometry ( double step_time )
 {
 
     ros::Time current_time = ros::Time::now();
@@ -492,5 +492,5 @@ void GazeboRosDiffDrive::publishOdometry ( double step_time )
     odometry_publisher_.publish ( odom_ );
 }
 
-GZ_REGISTER_MODEL_PLUGIN ( GazeboRosDiffDrive )
+GZ_REGISTER_MODEL_PLUGIN ( GazeboRosDiffDriveMW )
 }
