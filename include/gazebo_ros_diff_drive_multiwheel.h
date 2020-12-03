@@ -98,6 +98,7 @@ namespace gazebo {
       GazeboRosPtr gazebo_ros_;
       physics::ModelPtr parent;
       event::ConnectionPtr update_connection_;
+      std::vector<std::string> joint_names_[2];
 
       double wheel_separation_;
       double wheel_diameter_;
@@ -106,7 +107,7 @@ namespace gazebo {
 	    double wheel_accel;
       double wheel_speed_instr_[2];
 
-      std::vector<physics::JointPtr> joints_;
+      std::vector<physics::JointPtr> joints_[2];
 
       // ROS STUFF
       ros::Publisher odometry_publisher_;
