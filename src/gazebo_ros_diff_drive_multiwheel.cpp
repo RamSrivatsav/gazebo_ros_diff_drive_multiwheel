@@ -139,6 +139,26 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
 
 
 
+    for (size_t side = 0; side < 2; ++side){
+      for (size_t i = 0; i < joint_names_[side].size(); ++i){
+        joints_[side].push_back(this->parent->GetJoint(joint_names_[side][i]));
+        if (!joints_[side][i]){
+          char error[200];
+          snprintf(error, 200,
+                   "GazeboRosDiffDriveMultiWheel Plugin (ns = %s) couldn't get hinge joint named \"%s\"",
+                   this->robot_namespace_.c_str(), joint_names_[side][i].c_str());
+          gzthrow(error);
+        }
+#if (GAZEBO_MAJOR_VERSION > 8)
+        joints_[side][i]->SetParam ( "fmax", 0, wheel_torque );
+#else
+        joints_[side][i]->SetParam ( "fmax", 0, wheel_torque );
+#endif
+      }
+    }
+
+
+
     this->publish_tf_ = true;
     if (!_sdf->HasElement("publishTf")) {
       ROS_WARN_NAMED("diff_drive", "GazeboRosDiffDriveMW Plugin (ns = %s) missing <publishTf>, defaults to %d",
