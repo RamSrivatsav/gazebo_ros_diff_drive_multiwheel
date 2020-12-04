@@ -113,6 +113,24 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
     gazebo_ros_->getParameter<OdomSource> ( odom_source_, "odometrySource", odomOptions, WORLD );
 
 
+
+    this->left_joint_names_ = "left_joint";
+    if (!_sdf->HasElement("leftJoints")) {
+      gzthrow("Have to specify space separated left side joint names via <leftJoints> tag!");
+    } else {
+      std::string joint_string = _sdf->GetElement("leftJoints")->Get<std::string>();
+      boost::split( joint_names_[LEFT], joint_string, boost::is_any_of(" ") );
+    }
+
+    this->right_joint_names_ = "right_joint";
+    if (!_sdf->HasElement("rightJoints")) {
+      gzthrow("Have to specify space separated right side joint names via <rightJoints> tag!");
+    } else {
+      std::string joint_string = _sdf->GetElement("rightJoints")->Get<std::string>();
+      boost::split( joint_names_[RIGHT], joint_string, boost::is_any_of(" ") );
+    }
+
+
     joints_.resize ( 2 );
     joints_[LEFT] = gazebo_ros_->getJoint ( parent, "leftJoints", "left_joint" );
     joints_[RIGHT] = gazebo_ros_->getJoint ( parent, "rightJoints", "right_joint" );
