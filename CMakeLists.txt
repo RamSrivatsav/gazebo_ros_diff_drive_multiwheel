@@ -27,7 +27,17 @@ find_package(catkin REQUIRED COMPONENTS
   trajectory_msgs
   urdf
 )
+include_directories(include ${catkin_INCLUDE_DIRS})
 
+## Find gazebo
+find_package(gazebo REQUIRED)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
+include_directories(${GAZEBO_INCLUDE_DIRS})
+link_directories(${GAZEBO_LIBRARY_DIRS})
+
+## Find Boost
+find_package(Boost REQUIRED COMPONENTS thread)
+include_directories(${Boost_INCLUDE_DIRS})
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -165,6 +175,9 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
+add_library(gazebo_ros_diff_drive_multiwheel src/gazebo_ros_diff_drive_multiwheel.cpp)
+target_link_libraries(gazebo_ros_diff_drive_multiwheel ${Boost_LIBRARIES} ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES})
+
 #############
 ## Install ##
 #############
@@ -206,6 +219,20 @@ include_directories(
 #   # myfile2
 #   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 # )
+
+
+install(DIRECTORY include/${PROJECT_NAME}/
+  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  FILES_MATCHING PATTERN "*.h"
+  PATTERN ".svn" EXCLUDE
+)
+
+install(TARGETS
+  diffdrive_plugin_multi_wheel
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 #############
 ## Testing ##
