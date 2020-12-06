@@ -114,7 +114,7 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
 
 
 
-    this->left_joint_names_ = "left_joint";
+    joint_names_[LEFT] = "left_joint";
     if (!_sdf->HasElement("leftJoints")) {
       gzthrow("Have to specify space separated left side joint names via <leftJoints> tag!");
     } else {
@@ -122,7 +122,7 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
       boost::split( joint_names_[LEFT], joint_string, boost::is_any_of(" ") );
     }
 
-    this->right_joint_names_ = "right_joint";
+    joint_names_[RIGHT] = "right_joint";
     if (!_sdf->HasElement("rightJoints")) {
       gzthrow("Have to specify space separated right side joint names via <rightJoints> tag!");
     } else {
