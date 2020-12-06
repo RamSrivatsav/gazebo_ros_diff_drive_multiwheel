@@ -47,7 +47,7 @@
 #include <algorithm>
 #include <assert.h>
 
-#include <gazebo_plugins/gazebo_ros_diff_drive.h>
+#include <gazebo_ros_diff_drive_multiwheel/gazebo_ros_diff_drive_multiwheel.h>
 
 #include <ignition/math/Angle.hh>
 #include <ignition/math/Pose3.hh>
