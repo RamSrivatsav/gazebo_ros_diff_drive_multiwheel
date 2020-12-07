@@ -137,7 +137,7 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
                    this->robot_namespace_.c_str(), joint_names_[side][i].c_str());
           gzthrow(error);
         }
-#if (GAZEBO_MAJOR_VERSION > 8)
+#if GAZEBO_MAJOR_VERSION >= 8
         joints_[side][i]->SetParam ( "fmax", 0, wheel_torque );
 #else
         joints_[side][i]->SetParam ( "fmax", 0, wheel_torque );
@@ -224,11 +224,16 @@ void GazeboRosDiffDriveMW::Reset()
   pose_encoder_.theta = 0;
   x_ = 0;
   rot_ = 0;
-  joints_[LEFT]->SetParam ( "fmax", 0, wheel_torque );
-  joints_[RIGHT]->SetParam ( "fmax", 0, wheel_torque );
+
+  for (size_t side = 0; side < 2; ++side){
+    for (size_t i = 0; i < joint_names_[side].size(); ++i){
+      joints_[side][i]->SetParam ( "fmax", 0, wheel_torque );
+      // joints_[side]->SetParam ( "fmax", 0, wheel_torque );
+    }
+  }
 }
 
-void GazeboRosDiffDriveMW::publishWheelJointState()
+void GazeboRosDiffDriveMW::publishWheelJointState() // need to change this.
 {
     ros::Time current_time = ros::Time::now();
 
@@ -249,7 +254,7 @@ void GazeboRosDiffDriveMW::publishWheelJointState()
     joint_state_publisher_.publish ( joint_state_ );
 }
 
-void GazeboRosDiffDriveMW::publishWheelTF()
+void GazeboRosDiffDriveMW::publishWheelTF() // need to change this
 {
     ros::Time current_time = ros::Time::now();
     for ( int i = 0; i < 2; i++ ) {
