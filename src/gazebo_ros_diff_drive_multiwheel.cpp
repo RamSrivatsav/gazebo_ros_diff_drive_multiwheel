@@ -127,15 +127,6 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
       boost::split( joint_names_[RIGHT], joint_string, boost::is_any_of(" ") );
     }
 
-
-    joints_.resize ( 2 );
-    // joints_[LEFT] = gazebo_ros_->getJoint ( parent, "leftJoints", "left_joint" );
-    // joints_[RIGHT] = gazebo_ros_->getJoint ( parent, "rightJoints", "right_joint" );
-    // joints_[LEFT]->SetParam ( "fmax", 0, wheel_torque );
-    // joints_[RIGHT]->SetParam ( "fmax", 0, wheel_torque );
-
-
-
     for (size_t side = 0; side < 2; ++side){
       for (size_t i = 0; i < joint_names_[side].size(); ++i){
         joints_[side].push_back(this->parent->GetJoint(joint_names_[side][i]));
