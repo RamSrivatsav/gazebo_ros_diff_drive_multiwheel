@@ -113,8 +113,6 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
     gazebo_ros_->getParameter<OdomSource> ( odom_source_, "odometrySource", odomOptions, WORLD );
 
 
-
-    joint_names_[LEFT] = "left_joint";
     if (!_sdf->HasElement("leftJoints")) {
       gzthrow("Have to specify space separated left side joint names via <leftJoints> tag!");
     } else {
@@ -122,7 +120,6 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
       boost::split( joint_names_[LEFT], joint_string, boost::is_any_of(" ") );
     }
 
-    joint_names_[RIGHT] = "right_joint";
     if (!_sdf->HasElement("rightJoints")) {
       gzthrow("Have to specify space separated right side joint names via <rightJoints> tag!");
     } else {
@@ -132,10 +129,10 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
 
 
     joints_.resize ( 2 );
-    joints_[LEFT] = gazebo_ros_->getJoint ( parent, "leftJoints", "left_joint" );
-    joints_[RIGHT] = gazebo_ros_->getJoint ( parent, "rightJoints", "right_joint" );
-    joints_[LEFT]->SetParam ( "fmax", 0, wheel_torque );
-    joints_[RIGHT]->SetParam ( "fmax", 0, wheel_torque );
+    // joints_[LEFT] = gazebo_ros_->getJoint ( parent, "leftJoints", "left_joint" );
+    // joints_[RIGHT] = gazebo_ros_->getJoint ( parent, "rightJoints", "right_joint" );
+    // joints_[LEFT]->SetParam ( "fmax", 0, wheel_torque );
+    // joints_[RIGHT]->SetParam ( "fmax", 0, wheel_torque );
 
 
 
