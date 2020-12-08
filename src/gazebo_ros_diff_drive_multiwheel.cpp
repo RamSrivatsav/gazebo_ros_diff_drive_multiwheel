@@ -240,15 +240,17 @@ void GazeboRosDiffDriveMW::publishWheelJointState() // need to change this.
     joint_state_.name.resize ( joints_.size() );
     joint_state_.position.resize ( joints_.size() );
 
-    for ( int i = 0; i < 2; i++ ) {
-        physics::JointPtr joint = joints_[i];
+    for (size_t side = 0; side < 2; ++side){
+      for (size_t i = 0; i < joint_names_[side].size(); ++i){
+        physics::JointPtr joint = joints_[side][i];
 #if GAZEBO_MAJOR_VERSION >= 8
         double position = joint->Position ( 0 );
 #else
         double position = joint->GetAngle ( 0 ).Radian();
 #endif
-        joint_state_.name[i] = joint->GetName();
-        joint_state_.position[i] = position;
+        joint_state_.name[side][i] = joint->GetName();
+        joint_state_.position[side][i] = position;
+      }
     }
     joint_state_publisher_.publish ( joint_state_ );
 }
@@ -256,23 +258,26 @@ void GazeboRosDiffDriveMW::publishWheelJointState() // need to change this.
 void GazeboRosDiffDriveMW::publishWheelTF() // need to change this
 {
     ros::Time current_time = ros::Time::now();
-    for ( int i = 0; i < 2; i++ ) {
 
-        std::string wheel_frame = gazebo_ros_->resolveTF(joints_[i]->GetChild()->GetName ());
-        std::string wheel_parent_frame = gazebo_ros_->resolveTF(joints_[i]->GetParent()->GetName ());
+    for (size_t side = 0; side < 2; ++side){
+      for (size_t i = 0; i < joint_names_[side].size(); ++i){
+
+          std::string wheel_frame = gazebo_ros_->resolveTF(joints_[side][i]->GetChild()->GetName ());
+          std::string wheel_parent_frame = gazebo_ros_->resolveTF(joints_[side][i]->GetParent()->GetName ());
 
 #if GAZEBO_MAJOR_VERSION >= 8
-        ignition::math::Pose3d poseWheel = joints_[i]->GetChild()->RelativePose();
+          ignition::math::Pose3d poseWheel = joints_[side][i]->GetChild()->RelativePose();
 #else
-        ignition::math::Pose3d poseWheel = joints_[i]->GetChild()->GetRelativePose().Ign();
+          ignition::math::Pose3d poseWheel = joints_[side][i]->GetChild()->GetRelativePose().Ign();
 #endif
 
-        tf::Quaternion qt ( poseWheel.Rot().X(), poseWheel.Rot().Y(), poseWheel.Rot().Z(), poseWheel.Rot().W() );
-        tf::Vector3 vt ( poseWheel.Pos().X(), poseWheel.Pos().Y(), poseWheel.Pos().Z() );
+          tf::Quaternion qt ( poseWheel.Rot().X(), poseWheel.Rot().Y(), poseWheel.Rot().Z(), poseWheel.Rot().W() );
+          tf::Vector3 vt ( poseWheel.Pos().X(), poseWheel.Pos().Y(), poseWheel.Pos().Z() );
 
-        tf::Transform tfWheel ( qt, vt );
-        transform_broadcaster_->sendTransform (
-            tf::StampedTransform ( tfWheel, current_time, wheel_parent_frame, wheel_frame ) );
+          tf::Transform tfWheel ( qt, vt );
+          transform_broadcaster_->sendTransform (
+              tf::StampedTransform ( tfWheel, current_time, wheel_parent_frame, wheel_frame ) );
+      }
     }
 }
 
@@ -402,8 +407,8 @@ void GazeboRosDiffDriveMW::QueueThread()
 
 void GazeboRosDiffDriveMW::UpdateOdometryEncoder()
 {
-    double vl = joints_[LEFT]->GetVelocity ( 0 );
-    double vr = joints_[RIGHT]->GetVelocity ( 0 );
+    double vl = joints_[LEFT][0]->GetVelocity ( 0 );
+    double vr = joints_[RIGHT][0]->GetVelocity ( 0 );
 #if GAZEBO_MAJOR_VERSION >= 8
     common::Time current_time = parent->GetWorld()->SimTime();
 #else
