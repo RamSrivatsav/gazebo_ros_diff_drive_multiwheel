@@ -248,8 +248,8 @@ void GazeboRosDiffDriveMW::publishWheelJointState() // need to change this.
 #else
         double position = joint->GetAngle ( 0 ).Radian();
 #endif
-        joint_state_.name[(side+1)*i+inc] = joint->GetName();
-        joint_state_.position[(side+1)*i+inc] = position;
+        joint_state_.name[i+inc] = joint->GetName();
+        joint_state_.position[i+inc] = position;
       }
       inc += joint_names_[LEFT].size();
     }
