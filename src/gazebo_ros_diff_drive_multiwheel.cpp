@@ -239,7 +239,6 @@ void GazeboRosDiffDriveMW::publishWheelJointState() // need to change this.
     joint_state_.header.stamp = current_time;
     joint_state_.name.resize ( 2*joint_names_[LEFT].size() );
     joint_state_.position.resize ( 2*joint_names_[LEFT].size() );
-    int inc = 0;
     for (size_t side = 0; side < 2; ++side){
       for (size_t i = 0; i < joint_names_[side].size(); ++i){
         physics::JointPtr joint = joints_[side][i];
@@ -248,10 +247,9 @@ void GazeboRosDiffDriveMW::publishWheelJointState() // need to change this.
 #else
         double position = joint->GetAngle ( 0 ).Radian();
 #endif
-        joint_state_.name[i+inc] = joint->GetName();
-        joint_state_.position[i+inc] = position;
+        joint_state_.name[i+joint_names_[LEFT].size()*side] = joint->GetName();
+        joint_state_.position[i+joint_names_[LEFT].size()*side] = position;
       }
-      inc += joint_names_[LEFT].size();
     }
     joint_state_publisher_.publish ( joint_state_ );
 }
