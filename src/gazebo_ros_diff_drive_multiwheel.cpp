@@ -255,7 +255,7 @@ void GazeboRosDiffDriveMW::publishWheelJointState() // need to change this.
     joint_state_publisher_.publish ( joint_state_ );
 }
 
-void GazeboRosDiffDriveMW::publishWheelTF() // need to change this
+void GazeboRosDiffDriveMW::publishWheelTF()
 {
     ros::Time current_time = ros::Time::now();
 
