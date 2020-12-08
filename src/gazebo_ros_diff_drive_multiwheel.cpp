@@ -228,7 +228,6 @@ void GazeboRosDiffDriveMW::Reset()
   for (size_t side = 0; side < 2; ++side){
     for (size_t i = 0; i < joint_names_[side].size(); ++i){
       joints_[side][i]->SetParam ( "fmax", 0, wheel_torque );
-      // joints_[side]->SetParam ( "fmax", 0, wheel_torque );
     }
   }
 }
@@ -287,9 +286,11 @@ void GazeboRosDiffDriveMW::UpdateChild()
        and Joint::Reset is called after ModelPlugin::Reset, so we need to set maxForce to wheel_torque other than GazeboRosDiffDriveMW::Reset
        (this seems to be solved in https://bitbucket.org/osrf/gazebo/commits/ec8801d8683160eccae22c74bf865d59fac81f1e)
     */
-    for ( int i = 0; i < 2; i++ ) {
-      if ( fabs(wheel_torque -joints_[i]->GetParam ( "fmax", 0 )) > 1e-6 ) {
-        joints_[i]->SetParam ( "fmax", 0, wheel_torque );
+    for (size_t side = 0; side < 2; ++side){
+      for (size_t i = 0; i < joint_names_[side].size(); ++i){
+        if ( fabs(wheel_torque -joints_[side][i]->GetParam ( "fmax", 0 )) > 1e-6 ) {
+          joints_[side][i]->SetParam ( "fmax", 0, wheel_torque );
+        }
       }
     }
 
@@ -312,31 +313,43 @@ void GazeboRosDiffDriveMW::UpdateChild()
 
         double current_speed[2];
 
-        current_speed[LEFT] = joints_[LEFT]->GetVelocity ( 0 )   * ( wheel_diameter_ / 2.0 );
-        current_speed[RIGHT] = joints_[RIGHT]->GetVelocity ( 0 ) * ( wheel_diameter_ / 2.0 );
+        current_speed[LEFT] = joints_[LEFT][0]->GetVelocity ( 0 )   * ( wheel_diameter_ / 2.0 );
+        current_speed[RIGHT] = joints_[RIGHT][0]->GetVelocity ( 0 ) * ( wheel_diameter_ / 2.0 );
 
-        if ( wheel_accel == 0 ||
-                ( fabs ( wheel_speed_[LEFT] - current_speed[LEFT] ) < 0.01 ) ||
-                ( fabs ( wheel_speed_[RIGHT] - current_speed[RIGHT] ) < 0.01 ) ) {
-            //if max_accel == 0, or target speed is reached
-            joints_[LEFT]->SetParam ( "vel", 0, wheel_speed_[LEFT]/ ( wheel_diameter_ / 2.0 ) );
-            joints_[RIGHT]->SetParam ( "vel", 0, wheel_speed_[RIGHT]/ ( wheel_diameter_ / 2.0 ) );
-        } else {
-            if ( wheel_speed_[LEFT]>=current_speed[LEFT] )
-                wheel_speed_instr_[LEFT]+=fmin ( wheel_speed_[LEFT]-current_speed[LEFT],  wheel_accel * seconds_since_last_update );
-            else
-                wheel_speed_instr_[LEFT]+=fmax ( wheel_speed_[LEFT]-current_speed[LEFT], -wheel_accel * seconds_since_last_update );
 
-            if ( wheel_speed_[RIGHT]>current_speed[RIGHT] )
-                wheel_speed_instr_[RIGHT]+=fmin ( wheel_speed_[RIGHT]-current_speed[RIGHT], wheel_accel * seconds_since_last_update );
-            else
-                wheel_speed_instr_[RIGHT]+=fmax ( wheel_speed_[RIGHT]-current_speed[RIGHT], -wheel_accel * seconds_since_last_update );
+        for (size_t side = 0; side < 2; ++side){
+          for (size_t i = 0; i < joint_names_[side].size(); ++i){
+            if ( wheel_accel == 0 ||
+                    ( fabs ( wheel_speed_[LEFT] - current_speed[LEFT] ) < 0.01 ) ||
+                    ( fabs ( wheel_speed_[RIGHT] - current_speed[RIGHT] ) < 0.01 ) ) {
+                //if max_accel == 0, or target speed is reached
+                // joints_[LEFT]->SetParam ( "vel", 0, wheel_speed_[LEFT]/ ( wheel_diameter_ / 2.0 ) );
+                // joints_[RIGHT]->SetParam ( "vel", 0, wheel_speed_[RIGHT]/ ( wheel_diameter_ / 2.0 ) );
+                joints_[side][i]->SetParam ( "vel", 0, wheel_speed_[side]/ ( wheel_diameter_ / 2.0 ) );
+            } else {
+                // if ( wheel_speed_[LEFT]>=current_speed[LEFT] )
+                //     wheel_speed_instr_[LEFT]+=fmin ( wheel_speed_[LEFT]-current_speed[LEFT],  wheel_accel * seconds_since_last_update );
+                // else
+                //     wheel_speed_instr_[LEFT]+=fmax ( wheel_speed_[LEFT]-current_speed[LEFT], -wheel_accel * seconds_since_last_update );
 
-            // ROS_INFO_NAMED("diff_drive", "actual wheel speed = %lf, issued wheel speed= %lf", current_speed[LEFT], wheel_speed_[LEFT]);
-            // ROS_INFO_NAMED("diff_drive", "actual wheel speed = %lf, issued wheel speed= %lf", current_speed[RIGHT],wheel_speed_[RIGHT]);
+                // if ( wheel_speed_[RIGHT]>current_speed[RIGHT] )
+                //     wheel_speed_instr_[RIGHT]+=fmin ( wheel_speed_[RIGHT]-current_speed[RIGHT], wheel_accel * seconds_since_last_update );
+                // else
+                //     wheel_speed_instr_[RIGHT]+=fmax ( wheel_speed_[RIGHT]-current_speed[RIGHT], -wheel_accel * seconds_since_last_update );
 
-            joints_[LEFT]->SetParam ( "vel", 0, wheel_speed_instr_[LEFT] / ( wheel_diameter_ / 2.0 ) );
-            joints_[RIGHT]->SetParam ( "vel", 0, wheel_speed_instr_[RIGHT] / ( wheel_diameter_ / 2.0 ) );
+                if ( wheel_speed_[side]>current_speed[side] )
+                    wheel_speed_instr_[side]+=fmin ( wheel_speed_[side]-current_speed[side], wheel_accel * seconds_since_last_update );
+                else
+                    wheel_speed_instr_[side]+=fmax ( wheel_speed_[side]-current_speed[side], -wheel_accel * seconds_since_last_update );
+
+                // ROS_INFO_NAMED("diff_drive", "actual wheel speed = %lf, issued wheel speed= %lf", current_speed[LEFT], wheel_speed_[LEFT]);
+                // ROS_INFO_NAMED("diff_drive", "actual wheel speed = %lf, issued wheel speed= %lf", current_speed[RIGHT],wheel_speed_[RIGHT]);
+
+                // joints_[LEFT]->SetParam ( "vel", 0, wheel_speed_instr_[LEFT] / ( wheel_diameter_ / 2.0 ) );
+                // joints_[RIGHT]->SetParam ( "vel", 0, wheel_speed_instr_[RIGHT] / ( wheel_diameter_ / 2.0 ) );
+                joints_[side][i]->SetParam ( "vel", 0, wheel_speed_instr_[side] / ( wheel_diameter_ / 2.0 ) );
+            }
+          }
         }
         last_update_time_+= common::Time ( update_period_ );
     }
