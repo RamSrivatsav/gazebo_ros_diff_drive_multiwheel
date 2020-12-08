@@ -2,6 +2,11 @@
     "cmake.configureOnOpen": true,
     "files.associations": {
         "unordered_map": "cpp",
-        "unordered_set": "cpp"
+        "unordered_set": "cpp",
+        "array": "cpp",
+        "bitset": "cpp",
+        "initializer_list": "cpp",
+        "string_view": "cpp",
+        "utility": "cpp"
     }
 }
