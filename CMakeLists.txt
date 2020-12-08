@@ -228,7 +228,7 @@ install(DIRECTORY include/${PROJECT_NAME}/
 )
 
 install(TARGETS
-  gazebo_ros_diff_drive_multiwheel gazebo_ros_utils
+  gazebo_ros_diff_drive_multiwheel
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
