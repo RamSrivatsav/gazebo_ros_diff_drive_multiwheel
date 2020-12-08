@@ -128,9 +128,9 @@ include_directories(${Boost_INCLUDE_DIRS})
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES gazebo_ros_diff_drive_multiwheel
-#  CATKIN_DEPENDS cv_bridge dynamic_reconfigure gazebo_msgs geometry_msgs message_generation message_runtime nodelet nodelet rosconsole roscpp rosgraph_msgs rospy sensor_msgs std_srvs tf tf2_ros trajectory_msgs urdf
+ INCLUDE_DIRS include
+ LIBRARIES gazebo_ros_diff_drive_multiwheel gazebo_ros_utils
+ CATKIN_DEPENDS cv_bridge dynamic_reconfigure gazebo_msgs geometry_msgs message_generation message_runtime nodelet nodelet rosconsole roscpp rosgraph_msgs rospy sensor_msgs std_srvs tf tf2_ros trajectory_msgs urdf
 #  DEPENDS system_lib
 )
 
@@ -176,7 +176,7 @@ include_directories(
 # )
 
 add_library(gazebo_ros_diff_drive_multiwheel src/gazebo_ros_diff_drive_multiwheel.cpp)
-target_link_libraries(gazebo_ros_diff_drive_multiwheel ${Boost_LIBRARIES} ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES})
+target_link_libraries(gazebo_ros_diff_drive_multiwheel gazebo_ros_utils ${Boost_LIBRARIES} ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES})
 
 #############
 ## Install ##
@@ -228,7 +228,7 @@ install(DIRECTORY include/${PROJECT_NAME}/
 )
 
 install(TARGETS
-  gazebo_ros_diff_drive_multiwheel
+  gazebo_ros_diff_drive_multiwheel gazebo_ros_utils
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
