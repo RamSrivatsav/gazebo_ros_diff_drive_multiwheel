@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(gazebo_ros_diff_drive_multiwheel)
 
-## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
-
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
@@ -175,7 +172,7 @@ include_directories(
 #   ${catkin_LIBRARIES}
 # )
 
-add_library(gazebo_ros_diff_drive_multiwheel src/gazebo_ros_diff_drive_multiwheel.cpp)
+add_library(${PROJECT_NAME} src/gazebo_ros_diff_drive_multiwheel.cpp)
 target_link_libraries(gazebo_ros_diff_drive_multiwheel gazebo_ros_utils ${Boost_LIBRARIES} ${GAZEBO_LIBRARIES} ${catkin_LIBRARIES})
 
 #############
