@@ -22,6 +22,7 @@ find_package(catkin REQUIRED COMPONENTS
   tf
   tf2_ros
   trajectory_msgs
+  nav_msgs
   urdf
 )
 include_directories(include ${catkin_INCLUDE_DIRS})
