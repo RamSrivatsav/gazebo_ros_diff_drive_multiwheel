@@ -126,9 +126,9 @@ include_directories(${Boost_INCLUDE_DIRS})
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
- INCLUDE_DIRS include
- LIBRARIES gazebo_ros_diff_drive_multiwheel gazebo_ros_utils
- CATKIN_DEPENDS cv_bridge dynamic_reconfigure gazebo_msgs geometry_msgs message_generation message_runtime nodelet nodelet rosconsole roscpp rosgraph_msgs rospy sensor_msgs std_srvs tf tf2_ros trajectory_msgs urdf
+  INCLUDE_DIRS include
+  LIBRARIES gazebo_ros_diff_drive_multiwheel gazebo_ros_utils
+  CATKIN_DEPENDS cv_bridge dynamic_reconfigure gazebo_msgs geometry_msgs message_generation message_runtime nodelet nodelet rosconsole roscpp rosgraph_msgs rospy sensor_msgs std_srvs tf tf2_ros nav_msgs trajectory_msgs urdf
 #  DEPENDS system_lib
 )
 
