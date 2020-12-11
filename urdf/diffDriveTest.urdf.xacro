@@ -65,7 +65,7 @@
             <axis xyz="0 1 0" rpy="0 0 0" />
             <parent link="base_link"/>
             <child link="${prefex}_back_wheel"/>
-            <origin rpy="0 0 0" xyz="-${WheelPoss*2} ${reflect*WheelSep/2} -0.13"/>
+            <origin rpy="0 0 0" xyz="-${WheelPoss*2} ${reflect*WheelSep/2} -0.15"/>
         </joint>
         <gazebo reference="${prefex}_back_wheel">
             <material>Gazebo/Black</material>
@@ -90,7 +90,7 @@
             <axis xyz="0 1 0" rpy="0 0 0" />            
             <parent link="base_link"/>
             <child link="${prefex}_back_M_wheel"/>
-            <origin rpy="0 0 0" xyz="-${WheelPoss} ${reflect*WheelSep/2} -0.13"/>
+            <origin rpy="0 0 0" xyz="-${WheelPoss} ${reflect*WheelSep/2} -0.15"/>
         </joint>
         <gazebo reference="${prefex}_back_M_wheel">
             <material>Gazebo/Black</material>
@@ -116,7 +116,7 @@
             <axis xyz="0 1 0" rpy="0 0 0" />
             <parent link="base_link"/>
             <child link="${prefex}_front_M_wheel"/>
-            <origin rpy="0 0 0" xyz="${WheelPoss} ${reflect*WheelSep/2} -0.13"/>
+            <origin rpy="0 0 0" xyz="${WheelPoss} ${reflect*WheelSep/2} -0.15"/>
         </joint>
         <gazebo reference="${prefex}_front_M_wheel">
             <material>Gazebo/Black</material>
@@ -141,7 +141,7 @@
             <axis xyz="0 1 0" rpy="0 0 0" />
             <parent link="base_link"/>
             <child link="${prefex}_front_wheel"/>
-            <origin rpy="0 0 0" xyz="${WheelPoss*2} ${reflect*WheelSep/2} -0.13"/>
+            <origin rpy="0 0 0" xyz="${WheelPoss*2} ${reflect*WheelSep/2} -0.15"/>
         </joint>
         <gazebo reference="${prefex}_front_wheel">
             <material>Gazebo/Black</material>
@@ -182,7 +182,7 @@
             <wheelTorque>20</wheelTorque>
 
             <!-- Topic to receive geometry_msgs/Twist message commands, defaults to `cmd_vel` -->
-            <commandTopic>/diff_drive_controller/cmd_vel</commandTopic>
+            <commandTopic>diff_drive_controller/cmd_vel</commandTopic>
 
             <!-- Topic to publish nav_msgs/Odometry messages, defaults to `odom` -->
             <odometryTopic>odom</odometryTopic>
@@ -200,7 +200,7 @@
             <publishWheelTF>true</publishWheelTF>
 
             <!-- Set to true to publish transforms for the odometry, defaults to true -->
-            <publishOdom>true</publishOdom>
+            <publishOdomTF>true</publishOdomTF>
 
             <!-- Set to true to publish sensor_msgs/JointState on /joint_states for the wheel joints, defaults to false -->
             <publishWheelJointState>true</publishWheelJointState>

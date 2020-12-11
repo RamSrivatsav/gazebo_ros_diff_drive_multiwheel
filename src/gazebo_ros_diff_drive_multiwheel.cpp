@@ -93,7 +93,7 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
 
     if (!_sdf->HasElement("legacyMode"))
     {
-      ROS_ERROR_NAMED("diff_drive", "GazeboRosDiffDriveMW Plugin missing <legacyMode>, defaults to true\n"
+      ROS_ERROR_NAMED("diff_drive_MW", "GazeboRosDiffDriveMW Plugin missing <legacyMode>, defaults to true\n"
 	       "This setting assumes you have a old package, where the right and left wheel are changed to fix a former code issue\n"
 	       "To get rid of this error just set <legacyMode> to false if you just created a new package.\n"
 	       "To fix an old package you have to exchange left wheel by the right wheel.\n"
