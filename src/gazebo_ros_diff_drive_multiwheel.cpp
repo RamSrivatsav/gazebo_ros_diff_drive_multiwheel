@@ -78,7 +78,7 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
 {
 
     this->parent = _parent;
-    gazebo_ros_ = GazeboRosPtr ( new GazeboRos ( _parent, _sdf, "DiffDrive" ) );
+    gazebo_ros_ = GazeboRosPtr ( new GazeboRos ( _parent, _sdf, "DiffDriveMW" ) );
     // Make sure the ROS node for Gazebo has already been initialized
     gazebo_ros_->isInitialized();
 
@@ -149,7 +149,7 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
 
     this->publish_tf_ = true;
     if (!_sdf->HasElement("publishTf")) {
-      ROS_WARN_NAMED("diff_drive", "GazeboRosDiffDriveMW Plugin (ns = %s) missing <publishTf>, defaults to %d",
+      ROS_WARN_NAMED("diff_drive_MW", "GazeboRosDiffDriveMW Plugin (ns = %s) missing <publishTf>, defaults to %d",
           this->robot_namespace_.c_str(), this->publish_tf_);
     } else {
       this->publish_tf_ = _sdf->GetElement("publishTf")->Get<bool>();
@@ -180,13 +180,13 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
     if (this->publishWheelJointState_)
     {
         joint_state_publisher_ = gazebo_ros_->node()->advertise<sensor_msgs::JointState>("joint_states", 1000);
-        ROS_INFO_NAMED("diff_drive", "%s: Advertise joint_states", gazebo_ros_->info());
+        ROS_INFO_NAMED("diff_drive_MW", "%s: Advertise joint_states", gazebo_ros_->info());
     }
 
     transform_broadcaster_ = boost::shared_ptr<tf::TransformBroadcaster>(new tf::TransformBroadcaster());
 
     // ROS: Subscribe to the velocity command topic (usually "cmd_vel")
-    ROS_INFO_NAMED("diff_drive", "%s: Try to subscribe to %s", gazebo_ros_->info(), command_topic_.c_str());
+    ROS_INFO_NAMED("diff_drive_MW", "%s: Try to subscribe to %s", gazebo_ros_->info(), command_topic_.c_str());
 
     ros::SubscribeOptions so =
         ros::SubscribeOptions::create<geometry_msgs::Twist>(command_topic_, 1,
@@ -194,12 +194,12 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
                 ros::VoidPtr(), &queue_);
 
     cmd_vel_subscriber_ = gazebo_ros_->node()->subscribe(so);
-    ROS_INFO_NAMED("diff_drive", "%s: Subscribe to %s", gazebo_ros_->info(), command_topic_.c_str());
+    ROS_INFO_NAMED("diff_drive_MW", "%s: Subscribe to %s", gazebo_ros_->info(), command_topic_.c_str());
 
     if (this->publish_tf_)
     {
       odometry_publisher_ = gazebo_ros_->node()->advertise<nav_msgs::Odometry>(odometry_topic_, 1);
-      ROS_INFO_NAMED("diff_drive", "%s: Advertise odom on %s ", gazebo_ros_->info(), odometry_topic_.c_str());
+      ROS_INFO_NAMED("diff_drive_MW", "%s: Advertise odom on %s ", gazebo_ros_->info(), odometry_topic_.c_str());
     }
 
     // start custom queue for diff drive
