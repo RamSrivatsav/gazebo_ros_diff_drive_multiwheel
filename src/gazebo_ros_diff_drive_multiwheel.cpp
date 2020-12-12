@@ -145,7 +145,7 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
       }
     }
 
-
+    ROS_INFO_NAMED("diff_drive_MW", "Initialized");
 
     this->publish_tf_ = true;
     if (!_sdf->HasElement("publishTf")) {
