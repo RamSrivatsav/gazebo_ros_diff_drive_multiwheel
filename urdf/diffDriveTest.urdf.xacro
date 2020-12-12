@@ -65,7 +65,7 @@
             <axis xyz="0 1 0" rpy="0 0 0" />
             <parent link="base_link"/>
             <child link="${prefex}_back_wheel"/>
-            <origin rpy="0 0 0" xyz="-${WheelPoss*2} ${reflect*WheelSep/2} -0.15"/>
+            <origin rpy="0 0 0" xyz="-${WheelPoss*2} ${reflect*WheelSep/2} -0.17"/>
         </joint>
         <gazebo reference="${prefex}_back_wheel">
             <material>Gazebo/Black</material>
@@ -90,7 +90,7 @@
             <axis xyz="0 1 0" rpy="0 0 0" />            
             <parent link="base_link"/>
             <child link="${prefex}_back_M_wheel"/>
-            <origin rpy="0 0 0" xyz="-${WheelPoss} ${reflect*WheelSep/2} -0.15"/>
+            <origin rpy="0 0 0" xyz="-${WheelPoss} ${reflect*WheelSep/2} -0.17"/>
         </joint>
         <gazebo reference="${prefex}_back_M_wheel">
             <material>Gazebo/Black</material>
@@ -116,7 +116,7 @@
             <axis xyz="0 1 0" rpy="0 0 0" />
             <parent link="base_link"/>
             <child link="${prefex}_front_M_wheel"/>
-            <origin rpy="0 0 0" xyz="${WheelPoss} ${reflect*WheelSep/2} -0.15"/>
+            <origin rpy="0 0 0" xyz="${WheelPoss} ${reflect*WheelSep/2} -0.17"/>
         </joint>
         <gazebo reference="${prefex}_front_M_wheel">
             <material>Gazebo/Black</material>
@@ -141,7 +141,7 @@
             <axis xyz="0 1 0" rpy="0 0 0" />
             <parent link="base_link"/>
             <child link="${prefex}_front_wheel"/>
-            <origin rpy="0 0 0" xyz="${WheelPoss*2} ${reflect*WheelSep/2} -0.15"/>
+            <origin rpy="0 0 0" xyz="${WheelPoss*2} ${reflect*WheelSep/2} -0.17"/>
         </joint>
         <gazebo reference="${prefex}_front_wheel">
             <material>Gazebo/Black</material>

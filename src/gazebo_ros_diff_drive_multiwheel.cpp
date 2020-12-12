@@ -56,6 +56,17 @@
 #include <sdf/sdf.hh>
 
 #include <ros/ros.h>
+#include <tf/transform_broadcaster.h>
+#include <tf/transform_listener.h>
+#include <geometry_msgs/Twist.h>
+#include <nav_msgs/GetMap.h>
+#include <nav_msgs/Odometry.h>
+#include <boost/bind.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
+
+#include <gazebo/gazebo_config.h>
 
 namespace gazebo
 {
@@ -127,27 +138,6 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
       boost::split( joint_names_[RIGHT], joint_string, boost::is_any_of(" ") );
     }
 
-    ROS_INFO_NAMED("diff_drive_MW", "Initialized");
-    std::cout << joint_names_[RIGHT][1] << std::endl;
-
-    for (size_t side = 0; side < 2; ++side){
-      for (size_t i = 0; i < joint_names_[side].size(); ++i){
-        joints_[side].push_back(this->parent->GetJoint(joint_names_[side][i]));
-        if (!joints_[side][i]){
-          char error[200];
-          snprintf(error, 200,
-                   "GazeboRosDiffDriveMultiWheel Plugin (ns = %s) couldn't get hinge joint named \"%s\"",
-                   this->robot_namespace_.c_str(), joint_names_[side][i].c_str());
-          gzthrow(error);
-        }
-#if GAZEBO_MAJOR_VERSION >= 8
-        joints_[side][i]->SetParam ( "fmax", 0, wheel_torque );
-#else
-        joints_[side][i]->SetParam ( "fmax", 0, wheel_torque );
-#endif
-      }
-    }
-
     this->publish_tf_ = true;
     if (!_sdf->HasElement("publishTf")) {
       ROS_WARN_NAMED("diff_drive_MW", "GazeboRosDiffDriveMW Plugin (ns = %s) missing <publishTf>, defaults to %d",
@@ -176,6 +166,27 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
     x_ = 0;
     rot_ = 0;
     alive_ = true;
+
+    for (size_t side = 0; side < 2; ++side){
+      for (size_t i = 0; i < joint_names_[side].size(); ++i){
+        joints_[side].push_back(this->parent->GetJoint(joint_names_[side][i]));
+        if (!joints_[side][i]){
+          char error[200];
+          snprintf(error, 200,
+                   "GazeboRosDiffDriveMultiWheel Plugin (ns = %s) couldn't get hinge joint named \"%s\"",
+                   this->robot_namespace_.c_str(), joint_names_[side][i].c_str());
+          gzthrow(error);
+        }
+#if GAZEBO_MAJOR_VERSION >= 8
+        joints_[side][i]->SetEffortLimit (0, wheel_torque );
+#else
+        joints_[side][i]->SetMaxForce (0, wheel_torque );
+#endif
+      }
+    }
+
+    ROS_INFO_NAMED("diff_drive_MW", "Initialized");
+    std::cout << joint_names_[RIGHT][1] << std::endl;
 
 
     if (this->publishWheelJointState_)
