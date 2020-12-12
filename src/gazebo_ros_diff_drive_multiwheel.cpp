@@ -127,6 +127,9 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
       boost::split( joint_names_[RIGHT], joint_string, boost::is_any_of(" ") );
     }
 
+    ROS_INFO_NAMED("diff_drive_MW", "Initialized");
+    std::cout << joint_names_[RIGHT][1] << std::endl;
+
     for (size_t side = 0; side < 2; ++side){
       for (size_t i = 0; i < joint_names_[side].size(); ++i){
         joints_[side].push_back(this->parent->GetJoint(joint_names_[side][i]));
@@ -144,8 +147,6 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
 #endif
       }
     }
-
-    ROS_INFO_NAMED("diff_drive_MW", "Initialized");
 
     this->publish_tf_ = true;
     if (!_sdf->HasElement("publishTf")) {
