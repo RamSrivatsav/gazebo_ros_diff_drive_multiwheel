@@ -170,6 +170,9 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
     for (size_t side = 0; side < 2; ++side){
       for (size_t i = 0; i < joint_names_[side].size(); ++i){
         joints_[side].push_back(this->parent->GetJoint(joint_names_[side][i]));
+
+        ROS_INFO_NAMED("diff_drive_MW", "Initialized");
+        std::cout << joints_[side][i] << std::endl;
         if (!joints_[side][i]){
           char error[200];
           snprintf(error, 200,
@@ -184,9 +187,6 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
 #endif
       }
     }
-
-    ROS_INFO_NAMED("diff_drive_MW", "Initialized");
-    std::cout << joint_names_[RIGHT][1] << std::endl;
 
 
     if (this->publishWheelJointState_)
