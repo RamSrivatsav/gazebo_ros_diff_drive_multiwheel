@@ -168,7 +168,9 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
     alive_ = true;
 
     for (size_t side = 0; side < 2; ++side){
+      // joints_[side].resize(joint_names_[side].size());
       for (size_t i = 0; i < joint_names_[side].size(); ++i){
+        // joints_[side][i] = this->parent->GetJoint(joint_names_[side][i]);
         joints_[side].push_back(this->parent->GetJoint(joint_names_[side][i]));
         if (!joints_[side][i]){
           char error[200];
@@ -177,16 +179,9 @@ void GazeboRosDiffDriveMW::Load ( physics::ModelPtr _parent, sdf::ElementPtr _sd
                    this->robot_namespace_.c_str(), joint_names_[side][i].c_str());
           gzthrow(error);
         }
-#if GAZEBO_MAJOR_VERSION >= 8
-        joints_[side][i]->SetEffortLimit (0, wheel_torque );
-#else
-        joints_[side][i]->SetMaxForce (0, wheel_torque );
-#endif
+        joints_[side][i]->SetParam ( "fmax", 0, wheel_torque );
       }
     }
-
-    ROS_INFO_NAMED("diff_drive_MW", "Initialized");
-    std::cout << joints_[side][i] << std::endl;
 
 
     if (this->publishWheelJointState_)

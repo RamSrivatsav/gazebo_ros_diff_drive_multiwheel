@@ -161,8 +161,8 @@
         <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive_multiwheel.so">
 
             <updateRate>50</updateRate>
-            <leftJoints>left_back_wheel left_back_M_wheel left_front_M_wheel left_front_wheel</leftJoints>
-            <rightJoints>right_back_wheel right_back_M_wheel right_front_M_wheel right_front_wheel</rightJoints>
+            <leftJoints>left_back_wheel_joint left_back_M_wheel_joint left_front_M_wheel_joint left_front_wheel_joint</leftJoints>
+            <rightJoints>right_back_wheel_joint right_back_M_wheel_joint right_front_M_wheel_joint right_front_wheel_joint</rightJoints>
             <wheelSeparation>${WheelSep}</wheelSeparation>
             <wheelDiameter>${WheelRad*2}</wheelDiameter>
             <wheelAcceleration>1.0</wheelAcceleration>
