@@ -64,11 +64,14 @@ git clone https://github.com/RamSrivatsav/gazebo_ros_diff_drive_multiwheel.git
 cd ../..
 catkin_make
 ```
+
     * Executing the test launch file.
 ```bash
 source devel/setup.bash
 roslaunch gazebo_ros_diff_drive_multiwheel test.launch
 ```
+
     * This above testing script is configured to use sixWheelsRobot.xacro robot description. To switch to the other robot description, open file test.launch file in launch folder, uncomment the line three, comment line two and execute the test launch file again.
+    
     * Here is a brief clip of the plugin in action.
 ![](output_gif.gif)
