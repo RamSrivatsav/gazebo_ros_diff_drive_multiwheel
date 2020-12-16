@@ -51,6 +51,18 @@
  * $ Id: 06/21/2013 11:23:40 AM piyushk $
  */
 
+/*
+ * \file  gazebo_ros_diff_drive_multiwheel.cpp
+ *
+ * \brief A Multi wheel differential drive plugin for gazebo. Based on the diffdrive plugin
+ * developed for the erratic robot (see copyright notice above). The original
+ * plugin can be found in the ROS package gazebo_erratic_plugins.
+ *
+ * \author  Ram Srivatsav (vatsav.ben@gmail.com)
+ *
+ * $ Id: 12/16/2020 3:29 PM Ram $
+ */
+
 #ifndef DIFFDRIVE_MULTIWHEEL_PLUGIN_HH
 #define DIFFDRIVE_MULTIWHEEL_PLUGIN_HH
 
