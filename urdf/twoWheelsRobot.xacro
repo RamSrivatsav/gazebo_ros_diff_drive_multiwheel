@@ -1,18 +1,8 @@
 <?xml version='1.0'?>
 
-<robot name="my_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="twoWheelsRobot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:include filename="$(find gazebo_ros_diff_drive_multiwheel)/urdf/my_robot.gazebo" />
-
-  <link name="robot_footprint"></link>
-
-  <joint name="robot_footprint_joint" type="fixed">
-    <origin xyz="0 0 0" rpy="0 0 0" />
-    <parent link="robot_footprint"/>
-    <child link="chassis" />
-  </joint>
-
-  <link name='chassis'>
+  <link name='base_link'>
     <pose>0 0 0.1 0 0 0</pose>
 
     <inertial>
@@ -32,7 +22,7 @@
       </geometry>
     </collision>
 
-    <visual name='chassis_visual'>
+    <visual name='base_link_visual'>
       <origin xyz="0 0 0" rpy=" 0 0 0"/>
       <geometry>
         <box size=".4 .2 .1"/>
@@ -73,7 +63,7 @@
   <joint type="continuous" name="left_wheel_hinge">
     <origin xyz="0 0.15 0" rpy="0 0 0"/>
     <child link="left_wheel"/>
-    <parent link="chassis"/>
+    <parent link="base_link"/>
     <axis xyz="0 1 0" rpy="0 0 0"/>
     <limit effort="10000" velocity="1000"/>
     <dynamics damping="1.0" friction="1.0"/>
@@ -108,7 +98,7 @@
   <joint type="continuous" name="right_wheel_hinge">
     <origin xyz="0 -0.15 0" rpy="0 0 0"/>
     <child link="right_wheel"/>
-    <parent link="chassis"/>
+    <parent link="base_link"/>
     <axis xyz="0 1 0" rpy="0 0 0"/>
     <limit effort="10000" velocity="1000"/>
     <dynamics damping="1.0" friction="1.0"/>
@@ -141,16 +131,35 @@
   </link>
 
   <gazebo reference="left_wheel">
-    <material>Gazebo/Green</material>
+    <material>Gazebo/Black</material>
   </gazebo>
   <gazebo reference="right_wheel">
-    <material>Gazebo/Green</material>
+    <material>Gazebo/Black</material>
   </gazebo>
-  <gazebo reference="camera">
-    <material>Gazebo/Red</material>
-  </gazebo>
-  <gazebo reference="chassis">
+  <gazebo reference="base_link">
     <material>Gazebo/Blue</material>
+  </gazebo>
+
+
+  <gazebo>
+    <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive_multiwheel.so">
+      <updateRate>50</updateRate>
+      <leftJoints>left_wheel_hinge</leftJoints>
+      <rightJoints>right_wheel_hinge</rightJoints>
+      <wheelSeparation>0.4</wheelSeparation>
+      <wheelDiameter>0.2</wheelDiameter>
+      <wheelAcceleration>0.2</wheelAcceleration>
+      <wheelTorque>5</wheelTorque>
+      <commandTopic>diff_drive_controller/cmd_vel</commandTopic>
+      <odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame>
+      <robotBaseFrame>base_link</robotBaseFrame>
+      <odometrySource>1</odometrySource>
+      <publishWheelTF>true</publishWheelTF>
+      <publishOdomTF>true</publishOdomTF>
+      <publishWheelJointState>true</publishWheelJointState>
+      <legacyMode>false</legacyMode>
+    </plugin>
   </gazebo>
 
 </robot>
