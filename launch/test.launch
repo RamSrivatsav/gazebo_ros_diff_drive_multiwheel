@@ -1,5 +1,5 @@
 <launch>
-  <arg name="model" default="$(find gazebo_ros_diff_drive_multiwheel)/urdf/diffDriveTest.xacro"/>
+  <arg name="model" default="$(find gazebo_ros_diff_drive_multiwheel)/urdf/sixWheelsRobot.xacro"/>
   <!-- <arg name="model" default="$(find gazebo_ros_diff_drive_multiwheel)/urdf/twoWheelsRobot.xacro"/> -->
 
   <include file="$(find urdf_sim_tutorial)/launch/gazebo.launch">
