@@ -61,6 +61,27 @@
         <gazebo reference="${prefex}_back_wheel">
             <material>Gazebo/Black</material>
         </gazebo>
+        <link name="${prefex}_column_back">
+            <visual>
+                <geometry>
+                    <box size="0.01 0.04 0.02"/>
+                </geometry>
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="0.01 0.04 0.02"/>
+                </geometry>
+            </collision>
+            <xacro:default_inertial mass="0.01"/>
+        </link>
+        <joint name="${prefex}_back_wheel_coll_joint" type="fixed">
+            <child link="${prefex}_column_back"/>
+            <parent link="${prefex}_back_wheel"/>
+            <origin rpy="0 0 0" xyz="0.06 ${reflect*0.01} 0"/>
+        </joint>
+        <gazebo reference="${prefex}_column_back">
+            <material>Gazebo/White</material>
+        </gazebo>
 
         <!-- middle wheels -->
         <link name="${prefex}_middle_wheel">
@@ -89,6 +110,27 @@
         <gazebo reference="${prefex}_middle_wheel">
             <material>Gazebo/Black</material>
         </gazebo>
+        <link name="${prefex}_column_middle">
+            <visual>
+                <geometry>
+                    <box size="0.01 0.04 0.02"/>
+                </geometry>
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="0.01 0.04 0.02"/>
+                </geometry>
+            </collision>
+            <xacro:default_inertial mass="0.01"/>
+        </link>
+        <joint name="${prefex}_middle_wheel_coll_joint" type="fixed">
+            <child link="${prefex}_column_middle"/>
+            <parent link="${prefex}_middle_wheel"/>
+            <origin rpy="0 0 0" xyz="0.06 ${reflect*0.01} 0"/>
+        </joint>
+        <gazebo reference="${prefex}_column_middle">
+            <material>Gazebo/White</material>
+        </gazebo>
 
         <!-- front wheels -->
         <link name="${prefex}_front_wheel">
@@ -116,6 +158,27 @@
         </joint>
         <gazebo reference="${prefex}_front_wheel">
             <material>Gazebo/Black</material>
+        </gazebo>
+        <link name="${prefex}_column_front">
+            <visual>
+                <geometry>
+                    <box size="0.01 0.04 0.02"/>
+                </geometry>
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="0.01 0.04 0.02"/>
+                </geometry>
+            </collision>
+            <xacro:default_inertial mass="0.01"/>
+        </link>
+        <joint name="${prefex}_front_wheel_coll_joint" type="fixed">
+            <child link="${prefex}_column_front"/>
+            <parent link="${prefex}_front_wheel"/>
+            <origin rpy="0 0 0" xyz="0.06 ${reflect*0.01} 0"/>
+        </joint>
+        <gazebo reference="${prefex}_column_front">
+            <material>Gazebo/White</material>
         </gazebo>
     </xacro:macro>
 
